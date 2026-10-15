@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Celebration</title>
+
+  <style>
+    :root {
+      --pink: #ff4f91;
+      --purple: #7c4dff;
+      --yellow: #ffd166;
+      --dark: #241832;
+      --light: #fff8fc;
+      --card: rgba(255, 255, 255, 0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--dark);
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, #ffd6e8, transparent 35%),
+        radial-gradient(circle at bottom right, #c9b8ff, transparent 35%),
+        linear-gradient(135deg, #fff1f7, #eee8ff);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 80px 20px 55px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      line-height: 1;
+      color: var(--pink);
+      text-shadow: 4px 4px 0 #ffd166;
+    }
+
+    header p {
+      margin: 0 auto;
+      max-width: 600px;
+      font-size: 1.2rem;
+    }
+
+    main {
+      width: min(1100px, 92%);
+      margin: 0 auto 60px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: 0 18px 50px rgba(72, 35, 109, 0.12);
+      backdrop-filter: blur(12px);
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: var(--purple);
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      cursor: pointer;
+      color: white;
+      background: var(--purple);
+      font-weight: 700;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    button.secondary {
+      color: var(--dark);
+      background: #eee7ff;
+    }
+
+    button.accent {
+      background: var(--pink);
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid var(--yellow);
+      outline-offset: 3px;
+    }
+
+    .music-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .music-note {
+      margin-top: 16px;
+      color: #63586d;
+      font-size: 0.9rem;
+    }
+
+    .volume {
+      width: 140px;
+    }
+
+    .slideshow {
+      overflow: hidden;
+      position: relative;
+      border-radius: 18px;
+      background: #ddd;
+      aspect-ratio: 16 / 9;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .slide.active {
+      display: block;
+      animation: fade 0.5s ease;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .caption {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      padding: 18px;
+      color: white;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    }
+
+    .slide-controls,
+    .dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      padding: 0;
+      background: #d5c9e7;
+    }
+
+    .dot.active {
+      background: var(--pink);
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .time-box {
+      padding: 18px 10px;
+      text-align: center;
+      border-radius: 16px;
+      background: #fff0f7;
+    }
+
+    .time-box strong {
+      display: block;
+      font-size: 2rem;
+      color: var(--pink);
+    }
+
+    .date-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 2px solid #eadcf2;
+      border-radius: 12px;
+      padding: 12px;
+      background: white;
+      color: var(--dark);
+    }
+
+    .date-row input {
+      width: auto;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 700;
+    }
+
+    .message {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #fff4c9;
+    }
+
+    .guest-message {
+      margin-top: 12px;
+      padding: 14px;
+      border-left: 4px solid var(--pink);
+      border-radius: 10px;
+      background: #fff8fc;
+    }
+
+    .guest-message strong {
+      color: var(--pink);
+    }
+
+    footer {
+      padding: 30px 20px;
+      text-align: center;
+      color: #695b75;
+    }
+
+    #confetti-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    .confetti {
+      position: absolute;
+      top: -20px;
+      width: 10px;
+      height: 16px;
+      animation: fall 2.8s linear forwards;
+    }
+
+    @keyframes fade {
+      from { opacity: 0.3; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wide {
+        grid-column: auto;
+      }
+
+      .countdown {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .date-row input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="confetti-container" aria-hidden="true"></div>
+
+  <header>
+    <h1>Happy Birthday Aunt N!</h1>
+    <p>Let’s celebrate a day made for you 🎉</p>
+  </header>
+
+  <main>
+    <div class="grid">
+      <section class="card wide" aria-labelledby="music-title">
+        <h2 id="music-title">Birthday Music</h2>
+
+        <div class="music-controls">
+          <button id="musicButton" class="accent">▶ Play music</button>
+
+          <label for="volume" style="margin: 0;">Volume</label>
+          <input id="volume" class="volume" type="range" min="0" max="1" step="0.05" value="0.5" />
+
+          <span id="musicStatus" aria-live="polite">Music is paused</span>
+        </div>
+
+        <p class="music-note">
+          Music starts only after you press Play.
+        </p>
+      </section>
+       
+       <audio id="birthdayMusic" src="luther-vandross-buy-me-a-rose.mp3"></audio>
+
+  </section>
+</div>
+
+      <section class="card wide" aria-labelledby="slideshow-title">
+        <h2 id="slideshow-title">Birthday Memories</h2>
+
+        <div
+          class="slideshow"
+          id="slideshow"
+          tabindex="0"
+          aria-label="Birthday slideshow"
+        >
+         <div class="slide">
+            <img src="AuntN.png" alt="Birthday Queen !" />
+            <div class="caption">Make a wish!</div>
+          </div>
+
+          <div class="slide active">
+            <img src="hi.jpg" alt="Greetings" />
+            <div class="caption">A day full of colour and joy</div>
+          </div>
+
+            <div class="slide">
+            <img src="hug.jpg" alt="Birthday Hugs" />
+            <div class="caption">Make a wish!</div>
+          </div>
+
+          <div class="slide">
+            <img src="Bring.jpg" alt="Birthday cake with candles" />
+            <div class="caption">Make a wish!</div>
+          </div>
+
+          <div class="slide">
+            <img src="moreflowers.jpg" alt="More Birthday Flowers" />
+            <div class="caption">Let the celebration begin</div>
+          </div>
+
+          <div class="slide">
+            <img src="feel.jpg" alt="Friends celebrating together" />
+            <div class="caption">You are nothing but a blessing!</div>
+          </div>
+
+          <div class="slide">
+            <img src="inlove.jpg" alt="Forever I love You " />
+            <div class="caption">Here’s to another amazing year</div>
+          </div>
+        </div>
+
+        <div class="slide-controls">
+          <button id="previousButton" class="secondary">← Previous</button>
+          <button id="nextButton">Next →</button>
+          <button id="autoplayButton" class="secondary">Start autoplay</button>
+        </div>
+
+        <div class="dots" id="dots" aria-label="Choose a slide"></div>
+      </section>
+
+      <section class="card" aria-labelledby="message-title">
+        <h2 id="message-title">A Special Message</h2>
+        <p>
+          Wishing you a wonderful birthday filled with laughter, kindness,
+          unforgettable moments, and everything that makes you smile.
+        </p>
+
+        <button id="confettiButton" class="accent">
+          Celebrate with confetti 🎊
+        </button>
+      </section>
+
+      <section class="card" aria-labelledby="countdown-title">
+        <h2 id="countdown-title">Birthday Countdown</h2>
+
+        <div class="date-row">
+          <label for="birthdayDate">Choose a date:</label>
+          <input id="birthdayDate" type="date" />
+        </div>
+
+        <div class="countdown" aria-live="polite">
+          <div class="time-box">
+            <strong id="days">0</strong>
+            <span>Days</span>
+          </div>
+          <div class="time-box">
+            <strong id="hours">0</strong>
+            <span>Hours</span>
+          </div>
+          <div class="time-box">
+            <strong id="minutes">0</strong>
+            <span>Minutes</span>
+          </div>
+          <div class="time-box">
+            <strong id="seconds">0</strong>
+            <span>Seconds</span>
+          </div>
+        </div>
+
+        <p id="countdownMessage" class="message">
+          Choose a birthday date to start the countdown.
+        </p>
+      </section>
+
+      <section class="card wide" aria-labelledby="guest-title">
+        <h2 id="guest-title">Leave a Birthday Message</h2>
+
+        <form id="guestForm">
+          <label for="guestName">Your name</label>
+          <input
+            id="guestName"
+            name="name"
+            type="text"
+            placeholder="Enter your name"
+            required
+          />
+
+          <label for="guestMessage">Your message</label>
+          <textarea
+            id="guestMessage"
+            name="message"
+            placeholder="Write a birthday message..."
+            required
+          ></textarea>
+
+          <br />
+          <br />
+
+          <button type="submit">Add message</button>
+        </form>
+
+        <div id="messages" aria-live="polite">
+          <p>No messages yet. Be the first to leave one!</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>Made with love ❤️</footer>
+
+  <script>
+    // ----------------------------
+    // Simple birthday music player
+    // Uses Web Audio API, so no audio file is required.
+    // ----------------------------
+   /* let audioContext;
+    let oscillator;
+    let gainNode;
+    let musicPlaying = false;
+    let noteIndex = 0;
+    let musicTimer;
+
+    const musicButton = document.getElementById("musicButton");
+    const musicStatus = document.getElementById("musicStatus");
+    const volumeControl = document.getElementById("volume");
+
+    const melody = [
+      261.63, 329.63, 392.00, 523.25,
+      392.00, 329.63, 293.66, 392.00
+    ];*/
+const music = document.getElementById("birthdayMusic");
+const musicButton = document.getElementById("musicButton");
+const musicStatus = document.getElementById("musicStatus");
+const volumeControl = document.getElementById("volume");
+
+musicButton.addEventListener("click", () => {
+  if (music.paused) {
+    music.play();
+    musicButton.textContent = "⏸ Pause music";
+    musicStatus.textContent = "Music is playing 🎶";
+  } else {
+    music.pause();
+    musicButton.textContent = "▶ Play music";
+    musicStatus.textContent = "Music is paused";
+  }
+});
+
+volumeControl.addEventListener("input", () => {
+  music.volume = volumeControl.value;
+});
+
+    function playNextNote() {
+      if (!musicPlaying) return;
+
+      oscillator = audioContext.createOscillator();
+      gainNode = audioContext.createGain();
+
+      oscillator.type = "sine";
+      oscillator.frequency.value = melody[noteIndex];
+
+      gainNode.gain.setValueAtTime(
+        Number(volumeControl.value) * 0.12,
+        audioContext.currentTime
+      );
+      gainNode.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioContext.currentTime + 0.35
+      );
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.35);
+
+      noteIndex = (noteIndex + 1) % melody.length;
+      musicTimer = setTimeout(playNextNote, 380);
+    }
+
+    musicButton.addEventListener("click", async () => {
+      if (!audioContext) {
+        audioContext = new AudioContext();
+      }
+
+      if (musicPlaying) {
+        musicPlaying = false;
+        clearTimeout(musicTimer);
+        musicButton.textContent = "▶ Play music";
+        musicStatus.textContent = "Music is paused";
+      } else {
+        musicPlaying = true;
+        await audioContext.resume();
+        musicButton.textContent = "⏸ Pause music";
+        musicStatus.textContent = "Music is playing";
+        playNextNote();
+      }
+    });
+
+    // ----------------------------
+    // Slideshow
+    // ----------------------------
+    const slides = [...document.querySelectorAll(".slide")];
+    const dotsContainer = document.getElementById("dots");
+    const slideshow = document.getElementById("slideshow");
+    const autoplayButton = document.getElementById("autoplayButton");
+
+    let currentSlide = 0;
+    let autoplayTimer = null;
+    let autoplayEnabled = false;
+
+    slides.forEach((_, index) => {
+      const dot = document.createElement("button");
+      dot.className = "dot";
+      dot.setAttribute("aria-label", `Show slide ${index + 1}`);
+      dot.addEventListener("click", () => showSlide(index));
+      dotsContainer.appendChild(dot);
+    });
+
+    const dots = [...document.querySelectorAll(".dot")];
+
+    function showSlide(index) {
+      currentSlide = (index + slides.length) % slides.length;
+
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("active", i === currentSlide);
+      });
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === currentSlide);
+      });
+    }
+
+    function nextSlide() {
+      showSlide(currentSlide + 1);
+    }
+
+    function previousSlide() {
+      showSlide(currentSlide - 1);
+    }
+
+    function startAutoplay() {
+      autoplayEnabled = true;
+      autoplayButton.textContent = "Stop autoplay";
+      autoplayTimer = setInterval(nextSlide, 4000);
+    }
+
+    function stopAutoplay() {
+      autoplayEnabled = false;
+      autoplayButton.textContent = "Start autoplay";
+      clearInterval(autoplayTimer);
+    }
+
+    document.getElementById("nextButton").addEventListener("click", nextSlide);
+    document.getElementById("previousButton").addEventListener("click", previousSlide);
+
+    autoplayButton.addEventListener("click", () => {
+      autoplayEnabled ? stopAutoplay() : startAutoplay();
+    });
+
+    slideshow.addEventListener("mouseenter", () => {
+      if (autoplayEnabled) clearInterval(autoplayTimer);
+    });
+
+    slideshow.addEventListener("mouseleave", () => {
+      if (autoplayEnabled) {
+        autoplayTimer = setInterval(nextSlide, 4000);
+      }
+    });
+
+    showSlide(0);
+
+    // ----------------------------
+    // Countdown
+    // ----------------------------
+    const birthdayDate = document.getElementById("birthdayDate");
+    const countdownMessage = document.getElementById("countdownMessage");
+
+    birthdayDate.value = new Date().toISOString().split("T")[0];
+
+    function updateCountdown() {
+      const selectedDate = birthdayDate.value;
+
+      if (!selectedDate) return;
+
+      const target = new Date(`${selectedDate}T00:00:00`);
+      const now = new Date();
+      const difference = target - now;
+
+      if (difference <= 0) {
+        document.getElementById("days").textContent = "0";
+        document.getElementById("hours").textContent = "0";
+        document.getElementById("minutes").textContent = "0";
+        document.getElementById("seconds").textContent = "0";
+        countdownMessage.textContent = "It’s birthday time! 🎉";
+        return;
+      }
+
+      const seconds = Math.floor(difference / 1000);
+      const days = Math.floor(seconds / 86400);
+      const hours = Math.floor((seconds % 86400) / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const remainingSeconds = seconds % 60;
+
+      document.getElementById("days").textContent = days;
+      document.getElementById("hours").textContent = hours;
+      document.getElementById("minutes").textContent = minutes;
+      document.getElementById("seconds").textContent = remainingSeconds;
+      countdownMessage.textContent = "Counting down to the celebration!";
+    }
+
+    birthdayDate.addEventListener("change", updateCountdown);
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // ----------------------------
+    // Confetti
+    // ----------------------------
+    document.getElementById("confettiButton").addEventListener("click", () => {
+      const container = document.getElementById("confetti-container");
+      const colors = ["#ff4f91", "#7c4dff", "#ffd166", "#06d6a0", "#118ab2"];
+
+      for (let i = 0; i < 90; i++) {
+        const piece = document.createElement("span");
+        piece.className = "confetti";
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = `${Math.random() * 0.8}s`;
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        container.appendChild(piece);
+
+        setTimeout(() => piece.remove(), 3500);
+      }
+    });
+
+    // ----------------------------
+    // Guest messages
+    // ----------------------------
+    const guestForm = document.getElementById("guestForm");
+    const messagesContainer = document.getElementById("messages");
+
+    function getMessages() {
+      return JSON.parse(sessionStorage.getItem("birthdayMessages") || "[]");
+    }
+
+    function saveMessages(messages) {
+      sessionStorage.setItem("birthdayMessages", JSON.stringify(messages));
+    }
+
+    function renderMessages() {
+      const messages = getMessages();
+
+      if (messages.length === 0) {
+        messagesContainer.innerHTML =
+          "<p>No messages yet. Be the first to leave one!</p>";
+        return;
+      }
+
+      messagesContainer.innerHTML = messages
+        .map(
+          item => `
+            <article class="guest-message">
+              <strong>${escapeHtml(item.name)}</strong>
+              <p>${escapeHtml(item.message)}</p>
+            </article>
+          `
+        )
+        .join("");
+    }
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[character]));
+    }
+
+    guestForm.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const name = document.getElementById("guestName").value.trim();
+      const message = document.getElementById("guestMessage").value.trim();
+
+      if (!name || !message) return;
+
+      const messages = getMessages();
+      messages.unshift({ name, message });
+      saveMessages(messages);
+
+      guestForm.reset();
+      renderMessages();
+    });
+
+    renderMessages();
+  </script>
+</body>
+</html>
